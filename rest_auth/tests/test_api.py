@@ -502,8 +502,7 @@ class APIBasicTests(TestsMixin, TestCase):
         get_user_model().objects.create_user(self.USERNAME, '', self.PASS)
 
         self.post(self.login_url, data=payload, status_code=200)
-        resp = self.get(self.logout_url, status=status.HTTP_200_OK)
-        self.assertEqual(resp.json, {'detail': 'Successfully logged out.'})
+        self.get(self.logout_url, status=status.HTTP_200_OK)
 
     @override_settings(ACCOUNT_LOGOUT_ON_GET=False)
     def test_logout_on_post_only(self):
@@ -517,3 +516,16 @@ class APIBasicTests(TestsMixin, TestCase):
 
         self.post(self.login_url, data=payload, status_code=status.HTTP_200_OK)
         self.get(self.logout_url, status_code=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_response_message(self):
+        payload = {
+            "username": self.USERNAME,
+            "password": self.PASS
+        }
+
+        # create user
+        user = get_user_model().objects.create_user(**payload)
+        self.client.force_login(user)
+
+        resp = self.client.post(self.logout_url, payload)
+        self.assertEqual(resp.json(), {'detail': 'Successfully logged out.'})

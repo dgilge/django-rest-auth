@@ -501,7 +501,8 @@ class APIBasicTests(TestsMixin, TestCase):
         # create user
         get_user_model().objects.create_user(self.USERNAME, '', self.PASS)
 
-        self.post(self.login_url, data=payload, status_code=200)
+        resp = self.post(self.login_url, data=payload, status_code=200)
+        self.assertEqual(resp.json(), {'detail': 'Successfully logged out.'})
         self.get(self.logout_url, status=status.HTTP_200_OK)
 
     @override_settings(ACCOUNT_LOGOUT_ON_GET=False)

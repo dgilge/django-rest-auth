@@ -518,6 +518,8 @@ class APIBasicTests(TestsMixin, TestCase):
         self.get(self.logout_url, status_code=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_response_message(self):
+        from django.utils import translation
+
         payload = {
             "username": self.USERNAME,
             "password": self.PASS
@@ -527,5 +529,6 @@ class APIBasicTests(TestsMixin, TestCase):
         user = get_user_model().objects.create_user(**payload)
         self.client.force_login(user)
 
-        resp = self.client.post(self.logout_url, payload)
-        self.assertEqual(resp.json(), {'detail': 'Successfully logged out.'})
+        with translation.override('de'):
+            resp = self.client.post(self.logout_url, payload)
+        self.assertEqual(resp.json(), {'detail': 'Erfolgreich ausgeloggt.'})

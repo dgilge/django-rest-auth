@@ -1,13 +1,8 @@
-[flake8]
-max-line-length = 120
-exclude = docs/*,demo/*
-ignore = F403
-
-
-[coverage:run]
+# .coveragerc to control coverage.py
+[run]
 omit=*site-packages*,*distutils*,*migrations*
 
-[coverage:report]
+[report]
 # Regexes for lines to exclude from consideration
 exclude_lines =
     # Have to re-enable the standard pragma
@@ -27,5 +22,5 @@ exclude_lines =
 
 ignore_errors = True
 
-[coverage:html]
+[html]
 directory = coverage_html
